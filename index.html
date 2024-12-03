@@ -34,7 +34,7 @@
                 display: block;
                 height: 100%;
                 background: #4caf50;
-                width: 0%; /* Progress */
+                width: 0%; 
                 border-radius: 5px;
             }
 
@@ -94,6 +94,15 @@
             height: 100vh;
             margin-top: 30px;
         }
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+            color: #333;
+            font-weight: bold; 
+            text-align: center; 
+        }
     </style>
 </head>
 <body>
@@ -102,7 +111,7 @@
             <span id="progress"></span>
         </div>
         <div class="question" id="question">
-            Вопрос 1 из 11<br>
+            Вопрос 1 из 12<br>
             Рынок регулирует сам себя лучше, чем государство.
         </div>
         <div class="slider-container">
@@ -112,6 +121,13 @@
         </div>
         <div class="button-container">
             <button onclick="nextQuestion()">Продолжить</button>
+        </div>
+        <div class="info-text">
+            Этот новый тест на определении ваших политических координат.<br>
+            Тест основан на идеологемах главных идеологий мира.<br>
+            Он анонимный и результаты будут никому не видны, кроме вас.<br>
+            В конце вы получите результат, показанный на новых 3D полит. координатах (созданных мною и моим другом :) ).<br>
+            Спасибо за внимание!
         </div>
     </div>
 
@@ -129,7 +145,8 @@
             { text: "Мне в целом все равно какой сексуальной ориентации человек, какой одежду он носит или какие у него политические взгляды.", axis: "x", values: [-2, 1, 2] },
             { text: "Аристократические и монархические титулы необходимо отменить вовсе.", axis: "y", values: [2, -1, -2] },
             { text: "Патриотизм и гражданственность является залогом к светлому будущему государства.", axis: "y", values: [-2, 1, 2] },
-            { text: "Миграционные потоки необходимо свести к минимуму.", axis: "y", values: [-2, 1, 2] }
+            { text: "Миграционные потоки необходимо свести к минимуму.", axis: "y", values: [-2, 1, 2] },
+            { text: "Существуют плохие нации и плохие народы, которые необходимо уничтожить.", axis: "y", values: [-2, 1, 2] }
         ];
 
         let currentQuestion = 0;
@@ -158,46 +175,124 @@
         }
 
         function renderGraph() {
-            const data = [{
-                mode: "markers",
-                marker: { size: 10, color: "red" },
-                type: "scatter3d",
-                x: [coordinates.x],
-                y: [coordinates.y],
-                z: [coordinates.z],
-            }];
+            const data = [
+                {
+                    mode: "markers",
+                    marker: { size: 10, color: "yellow" },
+                    type: "scatter3d",
+                    x: [coordinates.x],
+                    y: [coordinates.y],
+                    z: [coordinates.z],
 
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "blackbrown" },
+                    type: "scatter3d",
+                    x: [-6],
+                    y: [8],
+                    z: [8],
+                    text: "Фашизм",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "red" },
+                    type: "scatter3d",
+                    x: [-8],
+                    y: [-8],
+                    z: [8],
+                    text: "Коммунизм",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "blue" },
+                    type: "scatter3d",
+                    x: [8],
+                    y: [4],
+                    z: [-5],
+                    text: "Либерализм",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "black" },
+                    type: "scatter3d",
+                    x: [-5],
+                    y: [-8],
+                    z: [-8],
+                    text: "Анархизм",
+                    hoverinfo: "text",
+                },
+               
+                {
+                    mode: "lines",
+                    line: { color: "blue", width: 3 },
+                    type: "scatter3d",
+                    x: [8, -8],
+                    y: [-8, -8],
+                    z: [-8, -8],
+                    text: "X",
+                    hoverinfo: "text",
+                },
+                
+                {
+                    mode: "lines",
+                    line: { color: "red", width: 3 },
+                    type: "scatter3d",
+                    x: [-8, -8],
+                    y: [-8, -8],
+                    z: [-8, 8],
+                    text: "Z",
+                    hoverinfo: "text",
+                },
+                
+                {
+                    mode: "lines",
+                    line: { color: "green", width: 3 },
+                    type: "scatter3d",
+                    x: [-8, -8],
+                    y: [-8, 8],
+                    z: [-8, -8],
+                    text: "Y",
+                    hoverinfo: "text",
+                }
+                
+            ];
             const layout = {
                 scene: {
                     xaxis: {
                         range: [-8, 8],
-                        title: 'Индивидуализм-Коллективизм',
+                        title: 'Индивидуализм(x)-Коллективизм(-x)',
                         showgrid: true,
                         zeroline: true,
-                        linecolor: 'blue', // Color of the X axis
-                        linewidth: 4,
                         mirror: true,
-                        titlefont: { color: 'blue' }
+                        linecolor: 'blue',
+                        linewidth: 4,
+                        titlefont: { color: 'blue' },
+                        
                     },
                     yaxis: {
                         range: [-8, 8],
-                        title: 'Интернационализм-Национализм',
+                        title: 'Интернационализм(-y)-Национализм(y)',
                         showgrid: true,
                         zeroline: true,
-                        linecolor: 'green', // Color of the Y axis
-                        linewidth: 4,
                         mirror: true,
-                        titlefont: { color: 'green' }
+                        linecolor: 'green',
+                        linewidth: 4,
+                        titlefont: { color: 'green' },
                     },
                     zaxis: {
                         range: [-8, 8],
-                        title: 'Либертарианство-Авторитаризм',
+                        title: 'Либертарианство(-z)-Авторитаризм(z)',
                         showgrid: true,
                         zeroline: true,
-                        linecolor: 'red', // Color of the Z axis
-                        linewidth: 4,
                         mirror: true,
-                        titlefont: { color: 'red' }
+                        linecolor: 'red',
+                        linewidth: 4,
+                        titlefont: { color: 'red' },
+                      
                     },
                     aspectratio: { x: 1, y: 1, z: 1 },
                     camera: {
@@ -210,55 +305,11 @@
                     b: 0,
                     t: 0
                 },
-                annotations: [
-                    {
-                        x: 8,
-                        y: 0,
-                        z: 0,
-                        text: "X",
-                        showarrow: true,
-                        arrowhead: 2,
-                        ax: -20,
-                        ay: 0,
-                        font: {
-                            size: 16,
-                            color: 'blue'
-                        }
-                    },
-                    {
-                        x: 0,
-                        y: 8,
-                        z: 0,
-                        text: "Y",
-                        showarrow: true,
-                        arrowhead: 2,
-                        ax: 0,
-                        ay: -20,
-                        font: {
-                            size: 16,
-                            color: 'green'
-                        }
-                    },
-                    {
-                        x: 0,
-                        y: 0,
-                        z: 8,
-                        text: "Z",
-                        showarrow: true,
-                        arrowhead: 2,
-                        ax: 0,
-                        ay: 0,
-                        font: {
-                            size: 16,
-                            color: 'red'
-                        }
-                    }
-                ]
             };
-
+            
             Plotly.newPlot('graph', data, layout);
         }
-        
+
     </script>
 </body>
 </html>
