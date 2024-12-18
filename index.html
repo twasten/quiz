@@ -1,348 +1,190 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест: Политические координаты</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Тест: Политические координаты</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
 
-        .progress-bar {
-            height: 5px;
-            background: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-            .progress-bar span {
-                display: block;
-                height: 100%;
-                background: #4caf50;
-                width: 0%; 
+            .progress-bar {
+                height: 5px;
+                background: #e0e0e0;
                 border-radius: 5px;
+                margin-bottom: 20px;
+                position: relative;
             }
 
-        .question {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-            .slider-container span {
-                font-size: 14px;
-            }
-
-        .slider {
-            width: 100%;
-            margin: 0 10px;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px;
-            background: linear-gradient(to right, red, green);
-            border-radius: 5px;
-            outline: none;
-            opacity: 0.9;
-            transition: opacity 0.2s;
-        }
-
-            .slider:hover {
-                opacity: 1;
-            }
-
-        .button-container {
-            text-align: center;
-        }
-
-            .button-container button {
-                background: #4caf50;
-                color: #fff;
-                border: none;
-                padding: 10px 20px;
-                font-size: 16px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-
-                .button-container button:hover {
-                    background: #45a049;
+                .progress-bar span {
+                    display: block;
+                    height: 100%;
+                    background: #4caf50;
+                    width: 0%;
+                    border-radius: 5px;
                 }
 
-        #graph {
-            width: 100%;
-            height: 100vh;
-            margin-top: 30px;
-        }
-
-        .info-text {
-            margin-top: 20px;
-            font-size: 18px;
-            line-height: 1.5;
-            color: #333;
-            font-weight: bold; 
-            text-align: center; 
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="progress-bar">
-            <span id="progress"></span>
-        </div>
-        <div class="question" id="question">
-            Вопрос 1 из 24<br>
-            Я согласен с тем, что государство должно представлять из себя максимально маленькое образование, т.е. защищать людей от агрессии, краж и мошенничества.
-        </div>
-        <div class="slider-container">
-            <span>Не согласен</span>
-            <input type="range" min="0" max="100" value="50" class="slider" id="slider">
-            <span>Согласен</span>
-        </div>
-        <div class="button-container">
-            <button onclick="nextQuestion()">Продолжить</button>
-        </div>
-        <div class="info-text">
-            Этот новый тест на определении ваших политических координат.<br>
-            Тест основан на идеологемах главных идеологий мира.<br>
-            Он анонимный и результаты будут никому не видны, кроме вас.<br>
-            В конце вы получите результат, показанный на новых 3D полит. координатах (созданных мною и моим другом :) ).<br>
-            Спасибо за внимание!
-        </div>
-    </div>
-
-    <div id="graph"></div>
-
-    <script>
-        const questions = [
-            { text: "Я согласен с тем, что государство должно представлять из себя максимально маленькое образование, т.е. защищать людей от агрессии, краж и мошенничества.", axis: "z", values: [3, 1.5, -3] },
-            { text: "Общество должно само себя регулировать в рамках самоуправления, т.е. автономно от власти.", axis: "z", values: [3, 1.5, -3] },
-            { text: "Я чувствую себя в стабильности и безопасности, когда в моём государстве существует сильная армия и сильные силовые структуры.", axis: "z", values: [-3, 1.5, 3] },
-            { text: "Я согласен, с утверждением, что <<сильная рука>> одного правителя или партии рано или поздно начнёт сильно <<душить>> народ.", axis: "z", values: [3, 1.5, -3] },
-            { text: "Права человека могут быть cильно ограничены, из-за потребностей во внешней или внутренней безопасности государства.", axis: "z", values: [-3, -1.5, 3] },
-	    { text: "Легалайз (легализация лёгких наркотиков) лучший способ борьбы с наркотиками .", axis: "z", values: [3, -1.5, -3] },
-            { text: "Частная собственность является преградой на пути построения к справедливому социальному обществу.", axis: "z", values: [-3, -1.5, 3] },
-            { text: "Меритократия (власть тех, кто достоен ею управлять ) является единственной эффективной формой управления государством.", axis: "z", values: [-3, -1.5, 3] },
-            { text: "Я за то, чтобы в моём государстве у богатых людей налоговая ставка была выше, чем у бедных.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Если я не реализовал себя в жизни, в этом виноват только я.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Государство обязано обеспечивать бесплатную медицинскую помощь, бесплатное образование и др., даже в ущерб моему финансовому положению.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Мне в целом все равно какой сексуальной ориентации человек, какой одежду он носит или какие у него политические взгляды.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Мир развивается по законам свыше, т.е. божьим, а вмешательство человека вредит естественному ходу жизни.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Быть наркоманом или алкоголиком это выбор самого наркомана или алкоголика.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Государство не должно штрафовать людей за езду за рулём не пристёгнутым, ведь это их выбор .", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Если моё государство начинает войну, с которой я не согласен, то я все равно выступлю с поддержкой моего государства.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Аристократические и монархические титулы необходимо отменить вовсе.", axis: "y", values: [3, 1.5, -3] },
-            { text: "Я был бы не против, чтобы моему ребенку с детства прививали любовь к Родине, даже если это выходит за рамки адекватности.", axis: "y", values: [-3, -1.5, 3] },
-            { text: "Миграционные потоки, как легальные, так и нелегальные, необходимо свести к минимуму.", axis: "y", values: [-3, -1.5, 3] },
-            { text: "Сохранение исторического наследия нации является главной задачей будущих поколений.", axis: "y", values: [-3, 1.5, 3] },
-            { text: "Объединение людей в крупные международные сообщества (глобализация или интернационализация) повлекло за собой большее количество минусов, чем плюсов.", axis: "y", values: [3, -1.5, -3] },
-            { text: "Я согласен с позицией марксистов, что нация-это феном только капиталистического общества и необходимо перестать делить мир на этносы.", axis: "y", values: [3, -1.5, -3] },
-            { text: "Расизм и расовая сегрегация является естественной природой человека.", axis: "y", values: [-3, 1.5, 3] },
-            { text: "Я был бы не против, если бы какой-нибудь нации не существовало вообще.", axis: "y", values: [-3, 1.5, 3] },
-        ];
-
-        let currentQuestion = 0;
-        const progressBar = document.getElementById("progress");
-        const questionElement = document.getElementById("question");
-        const slider = document.getElementById("slider");
-
-        let coordinates = { x: 0, y: 0, z: 0 };
-
-        function nextQuestion() {
-            const sliderValue = slider.value;
-            const impact = sliderValue < 33 ? 0 : sliderValue < 66 ? 1 : 2;
-
-            const axis = questions[currentQuestion].axis;
-            coordinates[axis] += questions[currentQuestion].values[impact];
-
-            currentQuestion++;
-            if (currentQuestion < questions.length) {
-                questionElement.innerHTML = `Вопрос ${currentQuestion + 1} из ${questions.length}<br>${questions[currentQuestion].text}`;
-                slider.value = 50;
-                progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
-            } else {
-                alert("Тест завершен! Построение графика...");
-                renderGraph();
+            .question {
+                font-size: 18px;
+                margin-bottom: 20px;
             }
-        }
 
-        function renderGraph() {
-            const data = [
-                {
-                    mode: "markers",
-                    marker: { size: 10, color: "yellow" },
-                    type: "scatter3d",
-                    x: [coordinates.x],
-                    y: [coordinates.y],
-                    z: [coordinates.z],
+            .slider-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
+            }
 
-                },
-                {
-                    mode: "markers", 
-                    marker: { size: 10, color: "blackbrown" },
-                    type: "scatter3d",
-                    x: [-21],
-                    y: [24],
-                    z: [24],
-                    text: "Фашизм",
-                    hoverinfo: "text"
-                },
-                {
-                    mode: "markers", 
-                    marker: { size: 10, color: "red" },
-                    type: "scatter3d",
-                    x: [-24],
-                    y: [-24],
-                    z: [24],
-                    text: "Коммунизм",
-                    hoverinfo: "text"
-                },
-                {
-                    mode: "markers", 
-                    marker: { size: 10, color: "blue" },
-                    type: "scatter3d",
-                    x: [24],
-                    y: [-6],
-                    z: [-18],
-                    text: "Либерализм",
-                    hoverinfo: "text"
-                },
-                {
-                    mode: "markers", 
-                    marker: { size: 10, color: "black" },
-                    type: "scatter3d",
-                    x: [-21],
-                    y: [-24],
-                    z: [-24],
-                    text: "Анархизм",
-                    hoverinfo: "text"
-                },
-                {
-                    mode: "markers", 
-                    marker: { size: 10, color: "purple" },
-                    type: "scatter3d",
-                    x: [9],
-                    y: [-15],
-                    z: [12],
-                    text: "Соц.-либерализм",
-                    hoverinfo: "text"
-                },
-                {
-
-                    mode: "markers", 
-                    marker: { size: 10, color: "green" },
-                    type: "scatter3d",
-                    x: [-12],
-                    y: [18],
-                    z: [21],
-                    text: "Соц.-консерватизм",
-                    hoverinfo: "text"
-                },
-               
-                {
-                    mode: "lines",
-                    line: { color: "blue", width: 3 },
-                    type: "scatter3d",
-                    x: [8, -8],
-                    y: [-8, -8],
-                    z: [-8, -8],
-                    text: "X",
-                    hoverinfo: "text"
-                },
-                
-                {
-                    mode: "lines",
-                    line: { color: "red", width: 3 },
-                    type: "scatter3d",
-                    x: [-8, -8],
-                    y: [-8, -8],
-                    z: [-8, 8],
-                    text: "Z",
-                    hoverinfo: "text"
-                },
-                
-                {
-                    mode: "lines",
-                    line: { color: "green", width: 3 },
-                    type: "scatter3d",
-                    x: [-8, -8],
-                    y: [-8, 8],
-                    z: [-8, -8],
-                    text: "Y",
-                    hoverinfo: "text"
+                .slider-container span {
+                    font-size: 14px;
                 }
-                
-            ];
-            const layout = {
-                scene: {
-                    xaxis: {
-                        range: [-24, 24],
-                        title: 'Индивидуализм(x)-Коллективизм(-x)',
-                        showgrid: true,
-                        zeroline: true,
-                        mirror: true,
-                        linecolor: 'blue',
-                        linewidth: 4,
-                        titlefont: { color: 'blue' },
-                        
-                    },
-                    yaxis: {
-                       range: [-24, 24],
-                        title: 'Интернационализм(-y)-Национализм(y)',
-                        showgrid: true,
-                        zeroline: true,
-                        mirror: true,
-                        linecolor: 'green',
-                        linewidth: 4,
-                        titlefont: { color: 'green' },
-                    },
-                    zaxis: {
-                        range: [-24, 24],
-                        title: 'Либертарианство(-z)-Авторитаризм(z)',
-                        showgrid: true,
-                        zeroline: true,
-                        mirror: true,
-                        linecolor: 'red',
-                        linewidth: 4,
-                        titlefont: { color: 'red' },
-                      
-                    },
-                    aspectratio: { x: 1, y: 1, z: 1 },
-                    camera: {
-                        eye: { x: 1.5, y: 1.5, z: 1.5 }
+
+            .slider {
+                width: 100%;
+                margin: 0 10px;
+                -webkit-appearance: none;
+                appearance: none;
+                height: 8px;
+                background: linear-gradient(to right, red, green);
+                border-radius: 5px;
+                outline: none;
+                opacity: 0.9;
+                transition: opacity 0.2s;
+            }
+
+                .slider:hover {
+                    opacity: 1;
+                }
+
+            .button-container {
+                text-align: center;
+            }
+
+                .button-container button {
+                    background: #4caf50;
+                    color: #fff;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+                    .button-container button:hover {
+                        background: #45a049;
                     }
-                },
-                margin: {
-                    l: 0,
-                    r: 0,
-                    b: 0,
-                    t: 0
-                },
-            };
-            
-            Plotly.newPlot('graph', data, layout);
-        }
 
-    </script>
-</body>
+            #graph {
+                width: 100%;
+                height: 100vh;
+                margin-top: 30px;
+            }
+
+            .info-text {
+                margin-top: 20px;
+                font-size: 18px;
+                line-height: 1.5;
+                color: #333;
+                font-weight: bold;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="progress-bar">
+                <span id="progress"></span>
+            </div>
+            <div class="question" id="question">
+                Вопрос 1 из 24<br>
+                Я согласен с тем, что государство должно представлять из себя максимально маленькое образование, т.е. защищать людей от агрессии, краж и мошенничества.
+            </div>
+            <div class="slider-container">
+                <span>Не согласен</span>
+                <input type="range" min="0" max="100" value="50" class="slider" id="slider">
+                <span>Согласен</span>
+            </div>
+            <div class="button-container">
+                <button onclick="nextQuestion()">Продолжить</button>
+            </div>
+            <div class="info-text">
+                Этот новый тест на определении ваших политических координат.<br>
+                Тест основан на идеологемах главных идеологий мира.<br>
+                Он анонимный и результаты будут никому не видны, кроме вас.<br>
+                В конце вы получите результат, показанный на новых 3D полит. координатах (созданных мною и моим другом :) ).<br>
+                Спасибо за внимание!
+            </div>
+        </div>
+
+        <script>
+            const questions = [
+                { text: "Я согласен с тем, что государство должно представлять из себя максимально маленькое образование, т.е. защищать людей от агрессии, краж и мошенничества.", axis: "z", values: [3, 1.5, -3] },
+                { text: "Общество должно само себя регулировать в рамках самоуправления, т.е. автономно от власти.", axis: "z", values: [3, 1.5, -3] },
+                { text: "Я чувствую себя в стабильности и безопасности, когда в моём государстве существует сильная армия и сильные силовые структуры.", axis: "z", values: [-3, 1.5, 3] },
+                { text: "Я согласен, с утверждением, что <<сильная рука>> одного правителя или партии рано или поздно начнёт сильно <<душить>> народ.", axis: "z", values: [3, 1.5, -3] },
+                { text: "Права человека могут быть cильно ограничены, из-за потребностей во внешней или внутренней безопасности государства.", axis: "z", values: [-3, -1.5, 3] },
+                { text: "Легалайз (легализация лёгких наркотиков) лучший способ борьбы с наркотиками .", axis: "z", values: [3, -1.5, -3] },
+                { text: "Частная собственность является преградой на пути построения к справедливому социальному обществу.", axis: "z", values: [-3, -1.5, 3] },
+                { text: "Меритократия (власть тех, кто достоен ею управлять ) является единственной эффективной формой управления государством.", axis: "z", values: [-3, -1.5, 3] },
+                { text: "Я за то, чтобы в моём государстве у богатых людей налоговая ставка была выше, чем у бедных.", axis: "x", values: [3, -1.5, -3] },
+                { text: "Если я не реализовал себя в жизни, в этом виноват только я.", axis: "x", values: [-3, 1.5, 3] },
+                { text: "Государство обязано обеспечивать бесплатную медицинскую помощь, бесплатное образование и др., даже в ущерб моему финансовому положению.", axis: "x", values: [3, -1.5, -3] },
+                { text: "Мне в целом все равно какой сексуальной ориентации человек, какой одежду он носит или какие у него политические взгляды.", axis: "x", values: [-3, 1.5, 3] },
+                { text: "Мир развивается по законам свыше, т.е. божьим, а вмешательство человека вредит естественному ходу жизни.", axis: "x", values: [3, -1.5, -3] },
+                { text: "Быть наркоманом или алкоголиком это выбор самого наркомана или алкоголика.", axis: "x", values: [-3, 1.5, 3] },
+                { text: "Государство не должно штрафовать людей за езду за рулём не пристёгнутым, ведь это их выбор .", axis: "x", values: [-3, 1.5, 3] },
+                { text: "Если моё государство начинает войну, с которой я не согласен, то я все равно выступлю с поддержкой моего государства.", axis: "x", values: [3, -1.5, -3] },
+                { text: "Аристократические и монархические титулы необходимо отменить вовсе.", axis: "y", values: [3, 1.5, -3] },
+                { text: "Я был бы не против, чтобы моему ребенку с детства прививали любовь к Родине, даже если это выходит за рамки адекватности.", axis: "y", values: [-3, -1.5, 3] },
+                { text: "Миграционные потоки, как легальные, так и нелегальные, необходимо свести к минимуму.", axis: "y", values: [-3, -1.5, 3] },
+                { text: "Сохранение исторического наследия нации является главной задачей будущих поколений.", axis: "y", values: [-3, 1.5, 3] },
+                { text: "Объединение людей в крупные международные сообщества (глобализация или интернационализация) повлекло за собой большее количество минусов, чем плюсов.", axis: "y", values: [3, -1.5, -3] },
+                { text: "Я согласен с позицией марксистов, что нация-это феном только капиталистического общества и необходимо перестать делить мир на этносы.", axis: "y", values: [3, -1.5, -3] },
+                { text: "Расизм и расовая сегрегация является естественной природой человека.", axis: "y", values: [-3, 1.5, 3] },
+                { text: "Я был бы не против, если бы какой-нибудь нации не существовало вообще.", axis: "y", values: [-3, 1.5, 3] },
+            ];
+
+            let currentQuestion = 0;
+            const progressBar = document.getElementById("progress");
+            const questionElement = document.getElementById("question");
+            const slider = document.getElementById("slider");
+
+            let coordinates = { x: 0, y: 0, z: 0 };
+
+            function nextQuestion() {
+                const sliderValue = slider.value;
+                const impact = sliderValue < 33 ? 0 : sliderValue < 66 ? 1 : 2;
+
+                const axis = questions[currentQuestion].axis;
+                coordinates[axis] += questions[currentQuestion].values[impact];
+
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    questionElement.innerHTML = `Вопрос ${currentQuestion + 1} из ${questions.length}<br>${questions[currentQuestion].text}`;
+                    slider.value = 50;
+                    progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+                } else {
+
+                    const params = new URLSearchParams(coordinates).toString();
+                    window.location.href = `graph.html?${params}`;
+                }
+            }
+        </script>
+    </body>
 </html>
+
+
