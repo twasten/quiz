@@ -180,7 +180,7 @@
         <div class="question" id="question">
             Question 1 of 24<br>
 
-            I agree that the state should be as minimal as possible, i.e., protecting people from aggression, theft, and fraud.
+            I agree that the state should interfere in people's lives only to protect them from violence and crimes.
         </div>
         <div class="slider-container">
             <span>Disagree</span>
@@ -217,30 +217,30 @@
 
     <script>
         const questions = [
-            { text: "I agree that the state should be as minimal as possible, i.e., protecting people from aggression, theft, and fraud.", axis: "z", values: [3, 1.5, -3] },
-            { text: "Society should regulate itself through self-governance, i.e., autonomously from authority.", axis: "z", values: [3, 1.5, -3] },
-            { text: "I feel stable and secure when my state has a strong army and strong law enforcement agencies.", axis: "z", values: [-3, 1.5, 3] },
-            { text: "It’s a myth that a 'strong hand' of one ruler or party will eventually start to oppress the people.", axis: "z", values: [-3, 1.5, 3] },
-            { text: "Human rights can be significantly restricted due to the needs of the state’s external or internal security.", axis: "z", values: [-3, -1.5, 3] },
-	        { text: "Legalizing (decriminalizing) soft drugs is the best way to combat drug problems.", axis: "z", values: [3, -1.5, -3] },
-            { text: "Anti-government protests and demonstrations cause more harm than good.", axis: "z", values: [-3, -1.5, 3] },
-            { text: "Meritocracy (rule by those who are most capable) is the only effective form of governance.", axis: "z", values: [-3, -1.5, 3] },
-            { text: "I support higher tax rates for wealthy individuals compared to poorer ones in my state.", axis: "x", values: [3, -1.5, -3] },
-            { text: "If I haven’t succeeded in life, it’s only my fault.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "The state must provide free healthcare, free education, etc., even at the expense of my financial situation.", axis: "x", values: [3, -1.5, -3] },
-            { text: "I don’t care about a person’s sexual orientation, clothing, or political views", axis: "x", values: [-3, 1.5, 3] },
-            { text: "The world develops according to higher laws, i.e., God's laws, and human intervention harms the natural course of life.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Being a drug addict or an alcoholic is the choice of the addict or alcoholic themselves.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "The state should not fine people for driving without a seatbelt, as it is their choice.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "If my state starts a war that I disagree with, I will still support my state.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Aristocratic and monarchical titles should be abolished entirely.", axis: "y", values: [3, 1.5, -3] },
-            { text: "I would not mind if my child were taught to love their homeland from an early age, even if it goes beyond reason.", axis: "y", values: [-3, -1.5, 3] },
-            { text: "Migration flows, both legal and illegal, should be minimized.", axis: "y", values: [-3, -1.5, 3] },
-            { text: "Preserving the historical heritage of the nation is the main task of future generations.", axis: "y", values: [-3, 1.5, 3] },
-            { text: "The unification of people into large international communities (globalization or internationalization) has brought more disadvantages than advantages.", axis: "y", values: [3, -1.5, -3] },
-            { text: "I agree with the Marxist position that the nation is a phenomenon of capitalist society and that the world should stop being divided into ethnic groups.", axis: "y", values: [3, -1.5, -3] },
-            { text: "Racism and racial segregation are the natural nature of humans.", axis: "y", values: [-3, 1.5, 3] },
-            { text: "I would not mind if a certain nation did not exist at all.", axis: "y", values: [-3, 1.5, 3] },
+    { text: "I agree that the state should interfere in people's lives only to protect them from violence and crimes.", axis: "z", values: [3, 1.5, -3] },
+    { text: "Minimal state intervention in the economy is the key to economic growth.", axis: "z", values: [3, 1.5, -3] },
+    { text: "I feel stable and secure when my country has a strong army and strong law enforcement structures.", axis: "z", values: [-3, 1.5, 3] },
+    { text: "The idea that strong leadership will lead to oppression of the people is exaggerated.", axis: "z", values: [-3, 1.5, 3] },
+    { text: "Human rights can be significantly restricted due to the needs of national or international security.", axis: "z", values: [-3, -1.5, 3] },
+    { text: "Legalization (of light drugs) is the best way to combat drug use.", axis: "z", values: [3, -1.5, -3] },
+    { text: "Anti-government rallies and demonstrations do more harm than good.", axis: "z", values: [-3, -1.5, 3] },
+    { text: "Only the most deserving people should hold high government positions and govern the country.", axis: "z", values: [-3, -1.5, 3] },
+    { text: "I support higher taxes for wealthy people in my country compared to the poor.", axis: "x", values: [3, -1.5, -3] },
+    { text: "If I haven't achieved self-realization in life, it's only my fault.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "The state must provide free healthcare, free education, etc., even at the expense of my financial situation.", axis: "x", values: [3, -1.5, -3] },
+    { text: "I generally don't care about a person's sexual orientation, what clothes they wear, or their political views.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "The world develops according to higher laws, i.e., divine laws, and human interference harms the natural course of life.", axis: "x", values: [3, -1.5, -3] },
+    { text: "Being a drug addict or alcoholic is the choice of the addict or alcoholic themselves.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "The state shouldn't fine people for driving without seat belts, as it's their choice.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "If my country starts a war that I disagree with, I would still support my country.", axis: "x", values: [3, -1.5, -3] },
+    { text: "Aristocratic and monarchical titles should be abolished entirely.", axis: "y", values: [3, 1.5, -3] },
+    { text: "I wouldn't mind if my child were taught love for the Motherland from childhood.", axis: "y", values: [-3, -1.5, 3] },
+    { text: "Migration flows, both legal and illegal, should be minimized.", axis: "y", values: [-3, -1.5, 3] },
+    { text: "Preserving the nation's historical heritage is the main task of future generations.", axis: "y", values: [-3, 1.5, 3] },
+    { text: "Globalization has brought more problems than benefits.", axis: "y", values: [3, -1.5, -3] },
+    { text: "Nations emerged because of capitalism, and there's no need to divide people by ethnicity.", axis: "y", values: [3, -1.5, -3] },
+    { text: "Racism and racial segregation are part of human nature.", axis: "y", values: [-3, 1.5, 3] },
+    { text: "My country's interests should take precedence over international interests.", axis: "y", values: [-3, 1.5, 3] }
         ];
 
         let currentQuestion = 0;
@@ -293,7 +293,6 @@
 
                 progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
             } else {
-                alert("Test completed! Building the graph...");
                 renderGraph();
             }
         }
