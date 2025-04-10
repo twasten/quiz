@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
             padding: 20px;
             background-color: #f4f4f4;
         }
@@ -30,13 +30,13 @@
             position: relative;
         }
 
-            .progress-bar span {
-                display: block;
-                height: 100%;
-                background: #4caf50;
-                width: 0%; 
-                border-radius: 5px;
-            }
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            background: #4caf50;
+            width: 0%; 
+            border-radius: 5px;
+        }
 
         .question {
             font-size: 18px;
@@ -50,9 +50,9 @@
             margin-bottom: 20px;
         }
 
-            .slider-container span {
-                font-size: 14px;
-            }
+        .slider-container span {
+            font-size: 14px;
+        }
 
         .slider {
             width: 100%;
@@ -60,39 +60,46 @@
             -webkit-appearance: none;
             appearance: none;
             height: 8px;
-            background: linear-gradient(to right, red, green);
+            background: linear-gradient(to right, red, #ccc, green);
             border-radius: 5px;
             outline: none;
             opacity: 0.9;
             transition: opacity 0.2s;
         }
 
-            .slider:hover {
-                opacity: 1;
-            }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4caf50;
+            cursor: pointer;
+            box-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
 
         .button-container {
             text-align: center;
         }
 
-            .button-container button {
-                background: #4caf50;
-                color: #fff;
-                border: none;
-                padding: 10px 20px;
-                font-size: 16px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+        .button-container button {
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-                .button-container button:hover {
-                    background: #45a049;
-                }
+        .button-container button:hover {
+            background: #45a049;
+        }
 
         #graph {
             width: 100%;
             height: 100vh;
             margin-top: 30px;
+            display: none;
         }
 
         .info-text {
@@ -102,6 +109,21 @@
             color: #333;
             font-weight: bold; 
             text-align: center; 
+        }
+
+	.question-image {
+            max-width: 100%;
+            height: auto;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none; /* По умолчанию скрываем */
+        }
+        
+        .question-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .info-text1 {
@@ -137,39 +159,33 @@
             transition: 0.3s ease;
         }
 
-            .language-switch:hover {
-                background: #4caf50;
-                color: #fff;
-            }
-
-        .text7 {
-            color: black;
+        .language-switch:hover {
+            background: #4caf50;
+            color: #fff;
         }
 
-        .text2 {
-            color: black;
+        .text7 { color: black; }
+        .text2 { color: black; }
+        .text3 { color: gold; }
+        .text4 { color: black; }
+        .text5 { color: red; }
+        .text1 { color: green; }
+        .text6 { color: blue; }
+
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            height: 20px;
+            display: none;
         }
 
-        .text3 {
-            color: gold;
-        }
-
-        .text4 {
-            color: black;
-        }
-
-        .text5 {
+        .required-message {
             color: red;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
         }
-
-        .text1 {
-            color: green;
-        }
-
-        .text6 {
-            color: blue;
-        }
-
     </style>
 </head>
 <body>
@@ -179,17 +195,20 @@
             <span id="progress"></span>
         </div>
         <div class="question" id="question">
-            Вопрос 1 из 24<br>
-            Я согласен с тем, что государство должно вмешиваться в жизнь людей только для их защиты от насилия и преступлений.
+		<img id="questionImage" class="question-image" src="" alt="Изображение к вопросу">
+            Вопрос 1 из 44<br>
+            Я считаю, что беспрекословное подчинение семейным правилам и рекомендациям, установленных родителями, является важной составляющей воспитания.
         </div>
+        <div class="slider-value" id="sliderValue"></div>
         <div class="slider-container">
-            <span>Не согласен</span>
-            <input type="range" min="0" max="100" value="50" class="slider" id="slider">
-            <span>Согласен</span>
+            <span>Категорически не согласен</span>
+            <input type="range" min="-2" max="2" step="1" value="0" class="slider" id="slider">
+            <span>Полностью согласен</span>
         </div>
+        <div class="required-message" id="requiredMessage">Пожалуйста, выберите позицию ползунка</div>
         <div class="button-container">
-            <button onclick="prevQuestion()">Назад</button>
-            <button onclick="nextQuestion()">Продолжить</button>
+            <button id="prevBtn" onclick="prevQuestion()" disabled>Назад</button>
+            <button id="nextBtn" onclick="nextQuestion()">Продолжить</button>
         </div>
         <div class="info-text">
             Этот новый тест на определение ваших политических координат.<br>
@@ -213,81 +232,139 @@
 
     <script>
         const questions = [
-            { text: "Я согласен с тем, что государство должно вмешиваться в жизнь людей только для их защиты от насилия и преступлений.", axis: "z", values: [3, 1.5, -3] },
-            { text: "Минимальное вмешательство государства в экономику-залог экономического роста.", axis: "z", values: [3, 1.5, -3] },
-            { text: "Я чувствую себя в стабильности и безопасности, когда в моём государстве существует сильная армия и сильные правоохранительные структуры.", axis: "z", values: [-3, 1.5, 3] },
-            { text: "Идея о том, что сильное руководство приведет к притеснению народа, преувеличена.", axis: "z", values: [-3, 1.5, 3] },
-            { text: "Права человека могут быть cильно ограничены, из-за потребностей во внешней или внутренней безопасности государства.", axis: "z", values: [-3, -1.5, 3] },
-            { text: "Легалайз (легализация лёгких наркотиков) лучший способ борьбы с употреблением наркотиков.", axis: "z", values: [3, -1.5, -3] },
-            { text: "Антиправительственные митинги и демонстрации приносят вреда больше, чем пользы", axis: "z", values: [-3, -1.5, 3] },
-            { text: "Только самые заслуженные люди должны занимать высокие посты в правительстве и управлять страной.", axis: "z", values: [-3, -1.5, 3] },
-            { text: "Я за то, чтобы в моём государстве у богатых людей налоги были выше, чем у бедных.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Если я не реализовал себя в жизни, в этом виноват только я.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Государство обязано обеспечивать бесплатную медицинскую помощь, бесплатное образование и др., даже в ущерб моему финансовому положению.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Мне в целом все равно какой сексуальной ориентации человек, какой одежду он носит или какие у него политические взгляды.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Мир развивается по законам свыше, т.е. божьим, а вмешательство человека вредит естественному ходу жизни.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Быть наркоманом или алкоголиком это выбор самого наркомана или алкоголика.", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Государство не должно штрафовать людей за езду за рулём не пристёгнутым, ведь это их выбор .", axis: "x", values: [-3, 1.5, 3] },
-            { text: "Если моё государство начинает войну, с которой я не согласен, то я все равно выступлю в поддержку моего государства.", axis: "x", values: [3, -1.5, -3] },
-            { text: "Аристократические и монархические титулы необходимо отменить вовсе.", axis: "y", values: [3, 1.5, -3] },
-            { text: "Я был бы не против, чтобы моему ребенку с детства прививали любовь к Родине.", axis: "y", values: [-3, -1.5, 3] },
-            { text: "Миграционные потоки, как легальные, так и нелегальные, необходимо свести к минимуму.", axis: "y", values: [-3, -1.5, 3] },
-            { text: "Сохранение исторического наследия нации является главной задачей будущих поколений.", axis: "y", values: [-3, 1.5, 3] },
-            { text: "Глобализация принесла больше проблем, чем пользы.", axis: "y", values: [3, -1.5, -3] },
-            { text: "Нации появились из-за капитализма, и делить людей по этносам не нужно.", axis: "y", values: [3, -1.5, -3] },
-            { text: "Расизм и расовая сегрегация является естественной природой человека.", axis: "y", values: [-3, 1.5, 3] },
-            { text: "Интересы моей страны должны стоять выше, чем международные интересы.", axis: "y", values: [-3, 1.5, 3] },
+            { text: "Я считаю, что беспрекословное подчинение семейным правилам и рекомендациям, установленных родителями, является важной составляющей воспитания.", axis: "z", values: [ -2, -1, 1, 2 ] },
+            { text: "Мне нравятся фильмы, в которых героизируют преступников или бандитов.", axis: "z", values: [ 2, 1, -1, -2 ] },
+            { text: "Я считаю, что прохождение военной службы может способствовать формированию гражданской ответственности среди мужчин.", axis: "z", values: [ -2, -1, 1, 2 ] },
+            { text: "Я считаю, что коллегиальный стиль руководства способствует эффективному принятию решений на рабочем месте.", axis: "z", values: [ 2, 1, -1, -2 ] },
+            { text: "В семейных отношениях допустимо распределение ролей, при котором один партнер доминирует, а другой оказывает поддержку.", axis: "z", values: [ -2, -1, 1, 2 ] },
+            { text: "Я считаю, что вмешательство государства в личную жизнь должно ограничиваться защитой граждан от насилия и преступлений.", axis: "z", values: [ 2, 1, -1, -2 ] },
+            { text: "Легализация легких наркотиков представляет один из возможных подходов к регулированию их употребления.", axis: "z", values: [ 2, 1, -1, -2 ] },
+            { text: "Только единицы людей имеют право занимать руководящие посты в государстве.", axis: "z", values: [-2, -1, 1, 2] },
+            { text: "Я склонен выбирать развлекательный контент, например, чтение гороскопов, вместо новостных обзоров.", axis: "z", values: [ 2, 1, -1, -2 ] },
+            { text: "Я считаю, что между частным сектором и государством может существовать равная конкуренция.", axis: "z", values: [-2, -1, 1, -2] },
+            { text: "Я считаю, что жесткое регулирование криптовалюты может способствовать обеспечению стабильности финансовой системы.", axis: "z", values: [ -2, -1, 1, -2 ] },
+            { text: "Я считаю, что ключи шифрования от мессенджеров должны быть переданы силовым структурам.", axis: "z", values: [-2, -1, 1, -2] },
+		{
+                text: "Выберите понравившуюся вам картинку",
+                axis: "z", 
+                values: [-2, -1, 1, 2],
+                image: "Работа/Image/1.jpg"
+            },
+
+            { text: "Я считаю полезным заключение брачного договора.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Ухаживание за моими престарелыми родителями является моим долгом, который я буду исполнять.", axis: "x", values: [ 2, 1, -1, -2 ] },
+            { text: "Мне в целом все равно какой сексуальной ориентации человек, какой одежду он носит или какие у него политические взгляды.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Быть наркоманом или алкоголиком это выбор самого наркомана или алкоголика.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Государство не должно штрафовать людей за езду за рулём не пристёгнутым, ведь это их выбор.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Я полагаю, что рождение детей лучше планировать после достижения карьерных целей.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Я предпочитаю городской уклад жизни перед сельским.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Шумные встречи в кругу друзей для меня — лучший способ отдохнуть.", axis: "x", values: [ 2, 1, -1, -2 ] },
+            { text: "Считаю справедливым более высокие налоги для богатых, чем для бедных.", axis: "x", values: [ 2, 1, -1, -2 ] },
+            { text: "Мои достижения или неудачи зависят исключительно от меня самого.", axis: "x", values: [ -2, -1, 1, 2 ] },
+            { text: "Государство должно предоставлять бесплатные социальные услуги, даже если это влияет на финансовую стабильность.", axis: "x", values: [ 2, 1, -1, -2 ] },
+            { text: "Между карьерой и семьей я могу предпочесть карьеру.", axis: "x", values: [ -2, -1, 1, 2 ] },
+
+            { text: "Отмена аристократических и монархических титулов может быть рассмотрена как шаг к модернизации общества.", axis: "y", values: [ 2, 1, -1, -2 ] },
+            { text: "Нации появились из-за капитализма, и делить людей по этносам не нужно.", axis: "y", values: [ 2, -1, -1, -2 ] },
+            { text: "Управление миграционными потоками может быть направлено на их минимизацию для социальной стабильности.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "При выборе партнера я буду учитывать внешние данные, например, цвет кожи.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "Я против того, чтобы религия играла значимую роль в регулировании общественных норм и ценностей.", axis: "y", values: [ 2, 1, -1, -2 ] },
+            { text: "Современный терроризм появился благодаря унификации культуры и универсальности либерализма.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "Сохранение исторического наследия нации является главной задачей будущих поколений.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "Читая новости, меня больше интересует международная повестка, а не внутренняя.", axis: "y", values: [ 2, 1, -1, -2 ] },
+            { text: "Я был бы не против, чтобы моему ребенку с детства прививали любовь к Родине.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "Национальные праздники очень интересны и полезны для понимания культуры.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "Я предпочту купить отечественную продукцию, а не импортную.", axis: "y", values: [ -2, -1, 1, 2 ] },
+            { text: "Получение образования за границей может быть привлекательным вариантом по сравнению с учебой на Родине.", axis: "y", values: [ 2, 1, -1, -2 ] }
         ];
+        
         let currentQuestion = 0;
         const progressBar = document.getElementById("progress");
         const questionElement = document.getElementById("question");
         const slider = document.getElementById("slider");
+        const sliderValueDisplay = document.getElementById("sliderValue");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const requiredMessage = document.getElementById("requiredMessage");
+        const graphElement = document.getElementById("graph");
 
         let coordinates = { x: 0, y: 0, z: 0 };
-        let sliderValues = Array(questions.length).fill(50);
+        let sliderValues = Array(questions.length).fill(0);
+        let hasAnswered = Array(questions.length).fill(false);
+
+        function updateSliderValue() {
+            const value = parseInt(slider.value);
+            let label = "";
+            let color = "#333";
+            
+            if (value < 0) {
+                label = value === -1 ? "Не согласен" : "Категорически не согласен";
+                color = "red";
+            } else if (value > 0) {
+                label = value === 1 ? "Согласен" : "Полностью согласен";
+                color = "green";
+            } else {
+                sliderValueDisplay.style.display = "none";
+                return;
+            }
+            
+            sliderValueDisplay.textContent = label;
+            sliderValueDisplay.style.color = color;
+            sliderValueDisplay.style.display = "block";
+        }
+
+        sliderValueDisplay.style.display = "none";
+        slider.addEventListener("input", function() {
+            if (this.value == 0) {
+                this.value = this.value < 0 ? -1 : 1;
+            }
+            updateSliderValue();
+            requiredMessage.style.display = "none";
+        });
 
         function prevQuestion() {
             if (currentQuestion > 0) {
-
-                sliderValues[currentQuestion] = slider.value;
-
+                sliderValues[currentQuestion] = parseInt(slider.value);
                 currentQuestion--;
 
                 questionElement.innerHTML = `Вопрос ${currentQuestion + 1} из ${questions.length}<br>${questions[currentQuestion].text}`;
-
                 slider.value = sliderValues[currentQuestion];
-
                 progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
+                updateSliderValue();
 
-                const previousSliderValue = sliderValues[currentQuestion + 1];
-                const impact = previousSliderValue < 33 ? 0 : previousSliderValue < 66 ? 1 : 2;
+                const previousValue = sliderValues[currentQuestion + 1];
                 const axis = questions[currentQuestion + 1].axis;
-                coordinates[axis] -= questions[currentQuestion + 1].values[impact];
+                let impactIndex = previousValue < 0 ? (previousValue === -1 ? 1 : 0) : (previousValue === 1 ? 2 : 3);
+                coordinates[axis] -= questions[currentQuestion + 1].values[impactIndex];
+                
+                hasAnswered[currentQuestion + 1] = false;
             }
         }
 
         function nextQuestion() {
+            if (slider.value == 0) {
+                requiredMessage.style.display = "block";
+                return;
+            }
 
-            sliderValues[currentQuestion] = slider.value;
-
-            const sliderValue = slider.value;
-            const impact = sliderValue < 33 ? 0 : sliderValue < 66 ? 1 : 2;
+            const value = parseInt(slider.value);
+            sliderValues[currentQuestion] = value;
+            hasAnswered[currentQuestion] = true;
 
             const axis = questions[currentQuestion].axis;
-            coordinates[axis] += questions[currentQuestion].values[impact];
+            let impactIndex = value < 0 ? (value === -1 ? 1 : 0) : (value === 1 ? 2 : 3);
+            coordinates[axis] += questions[currentQuestion].values[impactIndex];
 
             currentQuestion++;
 
             if (currentQuestion < questions.length) {
-
                 questionElement.innerHTML = `Вопрос ${currentQuestion + 1} из ${questions.length}<br>${questions[currentQuestion].text}`;
-
-
-                slider.value = sliderValues[currentQuestion];
-
-
+                slider.value = hasAnswered[currentQuestion] ? sliderValues[currentQuestion] : 0;
                 progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
+                updateSliderValue();
             } else {
+                document.querySelector('.container').style.display = 'none';
+                graphElement.style.display = 'block';
                 renderGraph();
             }
         }
@@ -301,7 +378,6 @@
                     x: [coordinates.x],
                     y: [coordinates.y],
                     z: [coordinates.z],
-
                 },
                 {
                     mode: "markers",
@@ -364,7 +440,6 @@
                     hoverinfo: "text"
                 },
                 {
-
                     mode: "markers",
                     marker: { size: 10, color: "green" },
                     type: "scatter3d",
@@ -374,7 +449,6 @@
                     text: "Соц.-консерватизм",
                     hoverinfo: "text"
                 },
-
                 {
                     mode: "lines",
                     line: { color: "blue", width: 3 },
@@ -385,7 +459,6 @@
                     text: "X",
                     hoverinfo: "text"
                 },
-
                 {
                     mode: "lines",
                     line: { color: "red", width: 3 },
@@ -396,7 +469,6 @@
                     text: "Z",
                     hoverinfo: "text"
                 },
-
                 {
                     mode: "lines",
                     line: { color: "green", width: 3 },
@@ -407,8 +479,8 @@
                     text: "Y",
                     hoverinfo: "text"
                 }
-
             ];
+            
             const layout = {
                 scene: {
                     xaxis: {
@@ -420,7 +492,6 @@
                         linecolor: 'blue',
                         linewidth: 4,
                         titlefont: { color: 'blue' },
-
                     },
                     yaxis: {
                         range: [-24, 24],
@@ -441,7 +512,6 @@
                         linecolor: 'red',
                         linewidth: 4,
                         titlefont: { color: 'red' },
-
                     },
                     aspectratio: { x: 1, y: 1, z: 1 },
                     camera: {
@@ -461,7 +531,6 @@
             document.querySelector('.info-text1').style.display = 'block';
             document.querySelector('.info-text').style.display = 'none';
         }
-
     </script>
 </body>
 </html>
