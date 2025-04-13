@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test: Political Coordinates</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+            .progress-bar span {
+                display: block;
+                height: 100%;
+                background: #4caf50;
+                width: 0%; 
+                border-radius: 5px;
+            }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+            .slider-container span {
+                font-size: 14px;
+            }
+
+        .slider {
+            width: 100%;
+            margin: 0 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: linear-gradient(to right, red, green);
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+            .slider:hover {
+                opacity: 1;
+            }
+
+        .button-container {
+            text-align: center;
+        }
+
+            .button-container button {
+                background: #4caf50;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .button-container button:hover {
+                    background: #45a049;
+                }
+
+        #graph {
+            width: 100%;
+            height: 100vh;
+            margin-top: 30px;
+        }
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+            color: #333;
+            font-weight: bold; 
+            text-align: center; 
+        }
+
+        .info-text1 {
+            margin-top: 20px;
+            font-size: 18px;
+            line-height: 1.5;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+            display: none; 
+            padding: 20px; 
+            background-color: white; 
+            border: 2px solid #ccc; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto; 
+        }
+	.language-switch {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            color: #4caf50;
+            font-weight: bold;
+            background: #fff;
+            padding: 5px 10px;
+            border: 1px solid #4caf50;
+            border-radius: 5px;
+            transition: 0.3s ease;
+        }
+
+            .language-switch:hover {
+                background: #4caf50;
+                color: #fff;
+            }
+
+        .text7 {
+            color: black;
+        }
+
+        .text2 {
+            color: black;
+        }
+
+        .text3 {
+            color: gold;
+        }
+
+        .text4 {
+            color: black;
+        }
+
+        .text5 {
+            color: red;
+        }
+
+        .text1 {
+            color: green;
+        }
+
+        .text6 {
+            color: blue;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="тест.html" class="language-switch" target="_self">Russia</a>
+    <div class="container">
+        <div class="progress-bar">
+            <span id="progress"></span>
+        </div>
+        <div class="question" id="question">
+            Question 1 of 24<br>
+
+            I agree that the state should interfere in people's lives only to protect them from violence and crimes.
+        </div>
+        <div class="slider-container">
+            <span>Disagree</span>
+            <input type="range" min="0" max="100" value="50" class="slider" id="slider">
+            <span>Agree</span>
+        </div>
+        <div class="button-container">
+            <button onclick="prevQuestion()">Back</button>
+            <button onclick="nextQuestion()">Continue</button>
+        </div>
+        <div class="info-text">
+            This is a new test to determine your political coordinates.
+
+            The test is based on the ideological principles of the world's major ideologies.
+
+            It is anonymous, and the results will only be visible to you.
+
+            At the end, you will receive a result displayed on new 3D political coordinates (created by me and my friend :) ).
+
+            Thank you for your attention!
+        </div>
+        <div class="info-text1">
+            <p class="text7">Thank you for taking our test!</p>
+            <p class="text2">At first glance, it might not be very clear, so we will try to explain everything to you.</p>
+            <p class="text3">Your position on the coordinates is represented by a yellow dot. For comparison, we show pre-defined and existing ideologies (communism, fascism, etc.). This feature can be disabled by clicking on the label in the upper right corner (except for the yellow dot).</p>
+            <p class="text4">Now, let’s explain in more detail what all of this means.</p>
+            <p class="text5">The Z-axis represents how important the role of the state is in society for you. The higher you are, the more significant and important the role of the state is for you. For example, the Soviet Union (and its dominant ideology of State Socialism), where the state played a defining role in societal development, would be high on this axis. The lower you are, the less important the state is for you. For instance, anarchism completely rejects the state, so it is positioned at the very bottom.</p>
+            <p class="text6">The X-axis represents your inclination toward collectivism or individualism. If you are closer to the camera (positive X-axis), your personal interests are more important to you than societal interests. If you are farther from the camera (negative X-axis), societal interests are more important to you than personal ones.</p>
+            <p class="text1">The Y-axis represents your attitude toward the concept of the nation. The farther right you are, the more important the concepts of nation, homeland, etc., are to you. This can range from moderate nationalism to ultra-nationalism. The farther left you are, the less important the concept of the nation is to you. To some extent, international issues are more important to you than national ones.</p>
+        </div>
+    </div>
+
+    <div id="graph"></div>
+
+    <script>
+        const questions = [
+    { text: "I agree that the state should interfere in people's lives only to protect them from violence and crimes.", axis: "z", values: [3, 1.5, -3] },
+    { text: "Minimal state intervention in the economy is the key to economic growth.", axis: "z", values: [3, 1.5, -3] },
+    { text: "I feel stable and secure when my country has a strong army and strong law enforcement structures.", axis: "z", values: [-3, 1.5, 3] },
+    { text: "The idea that strong leadership will lead to oppression of the people is exaggerated.", axis: "z", values: [-3, 1.5, 3] },
+    { text: "Human rights can be significantly restricted due to the needs of national or international security.", axis: "z", values: [-3, -1.5, 3] },
+    { text: "Legalization (of light drugs) is the best way to combat drug use.", axis: "z", values: [3, -1.5, -3] },
+    { text: "Anti-government rallies and demonstrations do more harm than good.", axis: "z", values: [-3, -1.5, 3] },
+    { text: "Only the most deserving people should hold high government positions and govern the country.", axis: "z", values: [-3, -1.5, 3] },
+    { text: "I support higher taxes for wealthy people in my country compared to the poor.", axis: "x", values: [3, -1.5, -3] },
+    { text: "If I haven't achieved self-realization in life, it's only my fault.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "The state must provide free healthcare, free education, etc., even at the expense of my financial situation.", axis: "x", values: [3, -1.5, -3] },
+    { text: "I generally don't care about a person's sexual orientation, what clothes they wear, or their political views.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "The world develops according to higher laws, i.e., divine laws, and human interference harms the natural course of life.", axis: "x", values: [3, -1.5, -3] },
+    { text: "Being a drug addict or alcoholic is the choice of the addict or alcoholic themselves.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "The state shouldn't fine people for driving without seat belts, as it's their choice.", axis: "x", values: [-3, 1.5, 3] },
+    { text: "If my country starts a war that I disagree with, I would still support my country.", axis: "x", values: [3, -1.5, -3] },
+    { text: "Aristocratic and monarchical titles should be abolished entirely.", axis: "y", values: [3, 1.5, -3] },
+    { text: "I wouldn't mind if my child were taught love for the Motherland from childhood.", axis: "y", values: [-3, -1.5, 3] },
+    { text: "Migration flows, both legal and illegal, should be minimized.", axis: "y", values: [-3, -1.5, 3] },
+    { text: "Preserving the nation's historical heritage is the main task of future generations.", axis: "y", values: [-3, 1.5, 3] },
+    { text: "Globalization has brought more problems than benefits.", axis: "y", values: [3, -1.5, -3] },
+    { text: "Nations emerged because of capitalism, and there's no need to divide people by ethnicity.", axis: "y", values: [3, -1.5, -3] },
+    { text: "Racism and racial segregation are part of human nature.", axis: "y", values: [-3, 1.5, 3] },
+    { text: "My country's interests should take precedence over international interests.", axis: "y", values: [-3, 1.5, 3] }
+        ];
+
+        let currentQuestion = 0;
+        const progressBar = document.getElementById("progress");
+        const questionElement = document.getElementById("question");
+        const slider = document.getElementById("slider");
+
+        let coordinates = { x: 0, y: 0, z: 0 };
+        let sliderValues = Array(questions.length).fill(50);
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+
+                sliderValues[currentQuestion] = slider.value;
+
+                currentQuestion--;
+
+                questionElement.innerHTML = `Question ${currentQuestion + 1} of ${questions.length}<br>${questions[currentQuestion].text}`;
+
+                slider.value = sliderValues[currentQuestion];
+
+                progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+                const previousSliderValue = sliderValues[currentQuestion + 1];
+                const impact = previousSliderValue < 33 ? 0 : previousSliderValue < 66 ? 1 : 2;
+                const axis = questions[currentQuestion + 1].axis;
+                coordinates[axis] -= questions[currentQuestion + 1].values[impact];
+            }
+        }
+
+        function nextQuestion() {
+
+            sliderValues[currentQuestion] = slider.value;
+
+            const sliderValue = slider.value;
+            const impact = sliderValue < 33 ? 0 : sliderValue < 66 ? 1 : 2;
+
+            const axis = questions[currentQuestion].axis;
+            coordinates[axis] += questions[currentQuestion].values[impact];
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+
+                questionElement.innerHTML = `Question ${currentQuestion + 1} of ${questions.length}<br>${questions[currentQuestion].text}`;
+
+
+                slider.value = sliderValues[currentQuestion];
+
+
+                progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
+            } else {
+                renderGraph();
+            }
+        }
+
+        function renderGraph() {
+            const data = [
+                {
+                    mode: "markers",
+                    marker: { size: 10, color: "yellow" },
+                    type: "scatter3d",
+                    x: [coordinates.x],
+                    y: [coordinates.y],
+                    z: [coordinates.z],
+
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "blackbrown" },
+                    type: "scatter3d",
+                    x: [-21],
+                    y: [24],
+                    z: [24],
+                    text: "Fascism",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "red" },
+                    type: "scatter3d",
+                    x: [-24],
+                    y: [-24],
+                    z: [-24],
+                    text: "Communism",
+                    hoverinfo: "text"
+                },
+{
+                    mode: "markers", 
+                    marker: { size: 10, color: "orange" },
+                    type: "scatter3d",
+                    x: [-24],
+                    y: [-3],
+                    z: [24],
+                    text: "State Socialism",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "blue" },
+                    type: "scatter3d",
+                    x: [24],
+                    y: [-6],
+                    z: [-18],
+                    text: "Liberalism",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "black" },
+                    type: "scatter3d",
+                    x: [0],
+                    y: [-24],
+                    z: [-24],
+                    text: "Anarchism",
+                    hoverinfo: "text"
+                },
+                {
+                    mode: "markers", 
+                    marker: { size: 10, color: "purple" },
+                    type: "scatter3d",
+                    x: [0],
+                    y: [-15],
+                    z: [6],
+                    text: "Social Liberalism",
+                    hoverinfo: "text"
+                },
+                {
+
+                    mode: "markers", 
+                    marker: { size: 10, color: "green" },
+                    type: "scatter3d",
+                    x: [-12],
+                    y: [15],
+                    z: [15],
+                    text: "Social Conservatism",
+                    hoverinfo: "text"
+                },
+               
+                {
+                    mode: "lines",
+                    line: { color: "blue", width: 3 },
+                    type: "scatter3d",
+                    x: [8, -8],
+                    y: [-8, -8],
+                    z: [-8, -8],
+                    text: "X",
+                    hoverinfo: "text"
+                },
+                
+                {
+                    mode: "lines",
+                    line: { color: "red", width: 3 },
+                    type: "scatter3d",
+                    x: [-8, -8],
+                    y: [-8, -8],
+                    z: [-8, 8],
+                    text: "Z",
+                    hoverinfo: "text"
+                },
+                
+                {
+                    mode: "lines",
+                    line: { color: "green", width: 3 },
+                    type: "scatter3d",
+                    x: [-8, -8],
+                    y: [-8, 8],
+                    z: [-8, -8],
+                    text: "Y",
+                    hoverinfo: "text"
+                }
+                
+            ];
+            const layout = {
+                scene: {
+                    xaxis: {
+                        range: [-24, 24],
+                        title: 'Individualism(x)-Collectivism(-x)',
+                        showgrid: true,
+                        zeroline: true,
+                        mirror: true,
+                        linecolor: 'blue',
+                        linewidth: 4,
+                        titlefont: { color: 'blue' },
+                        
+                    },
+                    yaxis: {
+                       range: [-24, 24],
+                        title: 'Internationalism(-y)-Nationalism(y)',
+                        showgrid: true,
+                        zeroline: true,
+                        mirror: true,
+                        linecolor: 'green',
+                        linewidth: 4,
+                        titlefont: { color: 'green' },
+                    },
+                    zaxis: {
+                        range: [-24, 24],
+                        title: 'Libertarianism(-z)-Authoritarianism(z)',
+                        showgrid: true,
+                        zeroline: true,
+                        mirror: true,
+                        linecolor: 'red',
+                        linewidth: 4,
+                        titlefont: { color: 'red' },
+                      
+                    },
+                    aspectratio: { x: 1, y: 1, z: 1 },
+                    camera: {
+                        eye: { x: 2.5, y: 2.5, z: 2.5 }
+                    }
+                },
+                margin: {
+                    l: 0,
+                    r: 0,
+                    b: 0,
+                    t: 0
+                },
+            };
+            
+            Plotly.newPlot('graph', data, layout);
+
+            document.querySelector('.info-text1').style.display = 'block';
+            document.querySelector('.info-text').style.display = 'none';
+        }
+
+    </script>
+</body>
+</html>
